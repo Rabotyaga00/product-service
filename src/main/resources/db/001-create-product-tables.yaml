@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Rabotyaga
+      changes:
+        - createTable:
+            tableName: category
+            columns:
+              - column:
+                  name: category_id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: Timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: price
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: rating
+                  type: float
+
+              - column:
+                  name: reveiws
+                  type: TEXT
+
+              - column:
+                  name: count_product
+                  type: INT
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: TEXT
+
+              - column:
+                  name: created_at
+                  type: Timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
