@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Rabotyaga
+      changes:
+        - addAutoIncrement:
+            tableName: category
+            columnName: category_id
+            columnDataType: INT

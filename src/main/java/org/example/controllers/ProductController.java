@@ -18,6 +18,21 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+
+
+//    {
+//        "orderId": "11111111-1111-1111-1111-111111111111",
+//            "userId": "22222222-2222-2222-2222-222222222222",
+//            "eventType": "ORDER_CREATED",
+//            "orderStatus": "PAID",
+//            "totalAmount": 100.0,
+//            "items": [
+//        { "productId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "quantity": 2 },
+//        { "productId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "quantity": 1 }
+//  ]
+//    }
+
+//7cdafc7b-e31b-40bc-86b3-a668b220c61b
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product addProduct(@RequestBody ProductResponseDTO  request) {
@@ -33,6 +48,13 @@ public class ProductController {
     @ResponseStatus(HttpStatus.FOUND)
     public Product getProductById(@PathVariable UUID id) {
         return productService.getProductById(id);
+    }
+
+
+    @GetMapping("/category/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Product getProductByCategoryId(@PathVariable int categoryId) {
+        return productService.getProductsByCategory(categoryId).get(0);
     }
 
     @DeleteMapping("/{id}")

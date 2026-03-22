@@ -1,3 +1,8 @@
+
+
+val mapstructVersion = "1.6.3"
+val lombokVersion = "1.18.36"
+
 plugins {
     id("java")
     id("org.springframework.boot") version "3.2.2"
@@ -27,19 +32,25 @@ dependencies {
 
     implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    // Kafka
-    implementation("org.springframework.kafka:spring-kafka")
-
     // DB
     runtimeOnly("org.postgresql:postgresql")
 
     // Lombok (для Java)
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
     implementation("org.liquibase:liquibase-core")
+
+    implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.apache.kafka:kafka-streams")
+
+    implementation("org.apache.commons:commons-lang3")
+    implementation("org.mapstruct:mapstruct:${mapstructVersion}")
+    annotationProcessor("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+
 }
 
 tasks.test {

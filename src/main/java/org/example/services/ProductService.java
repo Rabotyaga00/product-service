@@ -1,9 +1,11 @@
 package org.example.services;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.domains.Category;
 import org.example.domains.Product;
+import org.example.dto.OrderEventDTO;
+import org.example.dto.OrderItemDTO;
 import org.example.dto.ProductDTO;
 import org.example.dto.UpdateProductRequest;
 import org.example.repository.CategoryRepository;
@@ -38,7 +40,7 @@ private final CategoryRepository categoryRepository;
         }
         return productRepository.findById(id).get();
     }
-    public Product addProduct(int categoryId, String name, int price, String description, int countProducts) {
+    public Product addProduct(int categoryId, String name, int price, String description, int countProduct) {
         boolean existing = productRepository.existsByProductName(name);
         if (existing) {
             throw new RuntimeException ("Product with this name already exists");
@@ -52,7 +54,7 @@ private final CategoryRepository categoryRepository;
                 .productName(name)
                 .price(price)
                 .description(description)
-                .countProduct(countProducts)
+                .countProduct(countProduct)
                 .build());
     }
     public List<Product> getAllProducts() {
@@ -83,6 +85,27 @@ private final CategoryRepository categoryRepository;
 
         product = productRepository.save(product);
         return toDTO(product);
+    }
+
+    public void applyOrderEvent(OrderEventDTO orderEvent) {
+        if (orderEvent == null || orderEvent.getItems() == null) {
+            return;
+        }
+        for (OrderItemDTO item : orderEvent.getItems()) {
+            if (item.getProductId() == null) {
+                continue;
+            }
+            Product product = productRepository.findById(item.getProductId()).orElse(null);
+            if (product == null) {
+                throw new RuntimeException("Product not found: " + item.getProductId());
+            }
+            int newCount = product.getCountProduct() - item.getQuantity();
+            if (newCount < 0) {
+                throw new RuntimeException("Insufficient stock for product: " + item.getProductId());
+            }
+            product.setCountProduct(newCount);
+            productRepository.save(product);
+        }
     }
 
 

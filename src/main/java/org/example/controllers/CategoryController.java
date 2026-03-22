@@ -36,10 +36,17 @@ public class CategoryController {
         return categoryService.getCategoryById(id);
     }
 
+    @GetMapping("/name/{name}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public Category getCategoryByName(@PathVariable String name) {
+        return categoryService.getCategoryByName(name);
+    }
+
     @DeleteMapping("/{id}")
     public Category deleteCategoryById(@PathVariable int id) {
         return categoryService.deleteCategoryById(id);
     }
+
 
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategoryById(

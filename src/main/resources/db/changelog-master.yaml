@@ -1,3 +1,6 @@
 databaseChangeLog:
   - include:
       file: db/001-create-product-tables.yaml
+
+  - include:
+      file: db/002-alter-category-id.yaml

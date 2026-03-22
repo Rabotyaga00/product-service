@@ -5,9 +5,14 @@ debug: true
 
 spring:
 
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: product-service
+
   datasource:
 #    url: jdbc:postgresql://localhost:5432/product_db
-    url: jdbc:postgresql://postgres:5432/product_db
+    url: jdbc:postgresql://postgres:5433/product_db
     username: product_user
     password: password
     driver-class-name: org.postgresql.Driver
@@ -38,3 +43,20 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog-master.yaml
+
+
+app:
+  kafka:
+    topics:
+      order-events: order-events
+      product-events: product-events
+      user-events: user-events
+      dead-letter-queue: order-events-dlq
+    topic:
+      partitions: 3
+      replication-factor: 1
+    retry:
+      max-attempts: 3
+      backoff-delay: 1000
+      multiplier: 2.0
+      max-delay: 10000

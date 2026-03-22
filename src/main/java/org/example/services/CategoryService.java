@@ -1,6 +1,6 @@
 package org.example.services;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.domains.Category;
 import org.example.domains.Product;
@@ -36,6 +36,12 @@ private final CategoryRepository categoryRepository;
                 .build()
         );
     }
+    public Category getCategoryByName(String name) {
+        return categoryRepository.findByCategoryName(name)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+
     public List<Category> listCategory() {
         return categoryRepository.findAll();
     }

@@ -1,5 +1,6 @@
 package org.example.domains;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,20 +17,25 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "products")
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "product_id")
     private UUID productId;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column(name = "product_name")
     private String productName;
     private int price;
     private float rating;
+    @Column(name = "reveiws")
     private String reveiws;
+    @Column(name = "count_product")
     private int countProduct;
     private String description;
     @Column(name = "created_at")
