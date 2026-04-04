@@ -11,7 +11,6 @@ spring:
       group-id: product-service
 
   datasource:
-#    url: jdbc:postgresql://localhost:5432/product_db
     url: jdbc:postgresql://postgres:5433/product_db
     username: product_user
     password: password
@@ -26,7 +25,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none #update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -36,9 +35,6 @@ spring:
           allow_jdbc_metadata_access: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  #  grpc:
-  #    server:
-  #      port: 9090
 
   liquibase:
     enabled: true

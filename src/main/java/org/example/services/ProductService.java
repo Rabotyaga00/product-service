@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.mappers.ProductMapper;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.domains.Category;
@@ -23,15 +24,7 @@ public class ProductService {
 private final ProductRepository productRepository;
 private final CategoryRepository categoryRepository;
 
-    private ProductDTO toDTO(Product product) {
-        return ProductDTO.builder()
-                .categoryName(product.getCategory())
-                .countProducts(product.getCountProduct())
-                .productName(product.getProductName())
-                .description(product.getDescription())
-                .price(product.getPrice())
-                .build();
-    }
+    ProductMapper productMapper;
 
     public Product getProductById(UUID id)  {
         boolean exists = productRepository.existsById(id);
@@ -84,7 +77,7 @@ private final CategoryRepository categoryRepository;
         product.setCountProduct(request.getCountProduct());
 
         product = productRepository.save(product);
-        return toDTO(product);
+        return productMapper.toDTO(product);
     }
 
     public void applyOrderEvent(OrderEventDTO orderEvent) {

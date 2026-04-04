@@ -9,5 +9,4 @@ import java.util.UUID;
 public class OrderItemDTO {
     private UUID productId;
     private int quantity;
-//    private float price;
 }

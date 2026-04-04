@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/category")
@@ -68,7 +67,5 @@ public class CategoryController {
     public List<Product> getCategoryProducts(@PathVariable int id) {
         return productService.getProductsByCategory(id);
     }
-
-
 
 }

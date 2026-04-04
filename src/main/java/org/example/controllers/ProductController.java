@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,17 +23,16 @@ public class ProductController {
 
 //    {
 //        "orderId": "11111111-1111-1111-1111-111111111111",
-//            "userId": "22222222-2222-2222-2222-222222222222",
+//            "userId": "bd6ca49d-1ad0-4ae1-ba9d-12d7d2c14c8f",
 //            "eventType": "ORDER_CREATED",
 //            "orderStatus": "PAID",
 //            "totalAmount": 100.0,
 //            "items": [
-//        { "productId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "quantity": 2 },
-//        { "productId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb", "quantity": 1 }
+//        { "productId": "62ef80da-9218-4912-a4d5-bc1a13e7529f", "quantity": 2 },
 //  ]
 //    }
 
-//7cdafc7b-e31b-40bc-86b3-a668b220c61b
+//62ef80da-9218-4912-a4d5-bc1a13e7529f
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Product addProduct(@RequestBody ProductResponseDTO  request) {
@@ -53,8 +53,16 @@ public class ProductController {
 
     @GetMapping("/category/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
-    public Product getProductByCategoryId(@PathVariable int categoryId) {
-        return productService.getProductsByCategory(categoryId).get(0);
+    public List<ProductResponseDTO> getProductByCategoryId(@PathVariable int categoryId) {
+        return productService.getProductsByCategory(categoryId).stream().map(p -> {
+            ProductResponseDTO dto = new ProductResponseDTO();
+            dto.setCategoryId(p.getCategory().getId());
+            dto.setProductName(p.getProductName());
+            dto.setPrice(p.getPrice());
+            dto.setCountProduct(p.getCountProduct());
+            dto.setDescription(p.getDescription());
+            return dto;
+        }).toList();
     }
 
     @DeleteMapping("/{id}")

@@ -1,15 +1,14 @@
 package org.example.services;
 
+import org.example.mappers.CategoryMapper;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.domains.Category;
-import org.example.domains.Product;
 import org.example.dto.CategoryDTO;
 import org.example.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -17,13 +16,7 @@ import java.util.UUID;
 public class CategoryService {
 
 private final CategoryRepository categoryRepository;
-
-
-    private CategoryDTO mapToDTO(Category category){
-        CategoryDTO dto = new CategoryDTO();
-        dto.setCategoryName(category.getCategoryName());
-        return dto;
-    }
+CategoryMapper categoryMapper;
 
     public Category addCategory(String name) {
         boolean existing = categoryRepository.existsByCategoryName(name);
@@ -58,7 +51,6 @@ private final CategoryRepository categoryRepository;
     }
 
 
-//    принудительное сохранение или обновление данных не требует проверки по id
 public CategoryDTO sendCategory(int id, CategoryDTO dto) {
 
     Category category = categoryRepository.findById(id)
@@ -70,7 +62,7 @@ public CategoryDTO sendCategory(int id, CategoryDTO dto) {
 
     Category saved = categoryRepository.save(category);
 
-    return mapToDTO(saved);
+    return categoryMapper.mapToDTO(saved);
 }
 
 }

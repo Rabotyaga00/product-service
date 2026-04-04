@@ -17,8 +17,8 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
-@Builder // Добавляет строитель
-@NoArgsConstructor // Нужен для JPA
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category")
 public class Category {
