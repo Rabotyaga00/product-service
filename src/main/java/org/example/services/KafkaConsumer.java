@@ -65,7 +65,7 @@ public class KafkaConsumer {
      *
 //     * @param productEventDto автоматически десериализованный объект OrderEventDto
      */
-    @KafkaListener(topics = "${app.kafka.topics.order-events}")
+    @KafkaListener(topics = "${app.kafka.topics.order-created}")
     public void listenStandard(OrderEventDTO orderEventDto) {
         try {
             productService.applyOrderEvent(orderEventDto);

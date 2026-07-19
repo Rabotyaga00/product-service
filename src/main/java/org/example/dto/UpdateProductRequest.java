@@ -13,14 +13,18 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpdateProductRequest {
+public class 
+
+
+
+UpdateProductRequest {
 
     @Size(min = 2, max = 50)
     private String productName;
 
-    private int price;
+    private Integer price;
 
-    private int countProduct;
+    private Integer countProduct;
 
     private String description;
 

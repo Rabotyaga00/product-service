@@ -1,5 +1,7 @@
 package org.example.services;
 
+import org.example.exceptions.handler.InsufficientStockException;
+import org.example.exceptions.handler.ResourceNotFoundException;
 import org.example.mappers.ProductMapper;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,24 +26,19 @@ public class ProductService {
 private final ProductRepository productRepository;
 private final CategoryRepository categoryRepository;
 
-    ProductMapper productMapper;
+    private final ProductMapper productMapper;
 
     public Product getProductById(UUID id)  {
-        boolean exists = productRepository.existsById(id);
-        if (!exists) {
-            throw new RuntimeException ("Product with this id not found");
-        }
-        return productRepository.findById(id).get();
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with this id not found: " + id));
     }
     public Product addProduct(int categoryId, String name, int price, String description, int countProduct) {
         boolean existing = productRepository.existsByProductName(name);
         if (existing) {
             throw new RuntimeException ("Product with this name already exists");
         }
-        Category categor = categoryRepository.findById(categoryId).get();
-        if (categor == null) {
-            throw new RuntimeException ("Category with this id not found");
-        }
+
+        //Resource not found exception
+        Category categor = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found: " + categoryId));
         return productRepository.save(Product.builder()
                 .category(categor)
                 .productName(name)
@@ -56,7 +53,7 @@ private final CategoryRepository categoryRepository;
     public Product deleteProductById(UUID id) {
         Product product = productRepository.findById(id).orElse(null);
         if (product == null) {
-            throw new RuntimeException ("Product with this id not found");
+            throw new ResourceNotFoundException ("Product with this id not found: " + id);
         }
         productRepository.delete(product);
         return product;
@@ -64,18 +61,25 @@ private final CategoryRepository categoryRepository;
     public List<Product> getProductsByCategory(int categoryId) {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         if (category == null) {
-            throw new RuntimeException ("Category with this id not found");
+            throw new ResourceNotFoundException ("Category with this id not found: " + categoryId);
         }
         return productRepository.findAllByCategoryId(categoryId);
     }
 
     public ProductDTO sendProduct(UUID id, UpdateProductRequest request) {
-        Product product = productRepository.findById(id).get();
-        product.setProductName(request.getProductName());
-        product.setPrice(request.getPrice());
-        product.setDescription(request.getDescription());
-        product.setCountProduct(request.getCountProduct());
-
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product with this id not found: " + id));
+        if (request.getProductName() != null) {
+            product.setProductName(request.getProductName());
+        }
+        if (request.getPrice() != null){
+            product.setPrice(request.getPrice());
+        }
+        if (request.getDescription() != null){
+            product.setDescription(request.getDescription());
+        }
+        if (request.getCountProduct() != null){
+            product.setCountProduct(request.getCountProduct());
+        }
         product = productRepository.save(product);
         return productMapper.toDTO(product);
     }
@@ -90,11 +94,11 @@ private final CategoryRepository categoryRepository;
             }
             Product product = productRepository.findById(item.getProductId()).orElse(null);
             if (product == null) {
-                throw new RuntimeException("Product not found: " + item.getProductId());
+                throw new ResourceNotFoundException("Product not found: " + item.getProductId());
             }
             int newCount = product.getCountProduct() - item.getQuantity();
             if (newCount < 0) {
-                throw new RuntimeException("Insufficient stock for product: " + item.getProductId());
+                throw new InsufficientStockException("Insufficient stock for product: " + item.getProductId());
             }
             product.setCountProduct(newCount);
             productRepository.save(product);

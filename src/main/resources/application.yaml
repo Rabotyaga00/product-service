@@ -45,6 +45,7 @@ app:
   kafka:
     topics:
       order-events: order-events
+      order-created: order-created
       product-events: product-events
       user-events: user-events
       dead-letter-queue: order-events-dlq

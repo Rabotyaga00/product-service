@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.exceptions.handler.ResourceNotFoundException;
 import org.example.mappers.CategoryMapper;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 public class CategoryService {
 
 private final CategoryRepository categoryRepository;
-CategoryMapper categoryMapper;
+private final CategoryMapper categoryMapper;
 
     public Category addCategory(String name) {
         boolean existing = categoryRepository.existsByCategoryName(name);
@@ -31,7 +32,7 @@ CategoryMapper categoryMapper;
     }
     public Category getCategoryByName(String name) {
         return categoryRepository.findByCategoryName(name)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found" + name));
     }
 
 
@@ -41,20 +42,20 @@ CategoryMapper categoryMapper;
     public Category deleteCategoryById(int id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
-            throw new IllegalArgumentException("Category not found");
+            throw new ResourceNotFoundException("Category not found: " + id);
         }
         categoryRepository.delete(category);
         return category;
     }
     public Category getCategoryById(int id) {
-        return categoryRepository.findById(id).orElse(null);
+        return categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found: " + id));
     }
 
 
 public CategoryDTO sendCategory(int id, CategoryDTO dto) {
 
     Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Category not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
     if(dto.getCategoryName() != null){
         category.setCategoryName(dto.getCategoryName());

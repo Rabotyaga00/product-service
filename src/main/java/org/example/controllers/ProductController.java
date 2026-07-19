@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import jakarta.validation.Valid;
 import org.example.domains.Product;
 import org.example.dto.ProductDTO;
 import org.example.dto.ProductResponseDTO;
@@ -73,12 +74,12 @@ public class ProductController {
     @PatchMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProductById(
             @PathVariable  UUID id,
-            @RequestBody UpdateProductRequest request){
+            @Valid @RequestBody UpdateProductRequest request){
 
         boolean hasUpdates = request.getProductName() != null ||
-                            request.getCountProduct() != 0 ||
+                            request.getCountProduct() != null ||
                             request.getDescription() != null ||
-                            request.getPrice() != 0;
+                            request.getPrice() != null;
 
         if(!hasUpdates) {
             return ResponseEntity.badRequest().build();
